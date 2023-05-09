@@ -12,7 +12,7 @@ function git_folder() {
 }
 
 # Change to worktree directory based on branch name
-function chwt() {
+function wtcd() {
     local branch=$1
     local worktree_path=$(git worktree list | grep '\['$branch'\]' | cut -d' ' -f1)
 
@@ -28,4 +28,4 @@ function _wtbranches() {
     compadd $(git worktree list --porcelain | grep '^branch' | cut -d' ' -f2 | sed 's,refs/heads/,,g')
 }
 
-compdef _wtbranches chwt
+compdef _wtbranches wtcd
