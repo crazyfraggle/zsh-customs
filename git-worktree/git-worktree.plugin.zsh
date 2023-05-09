@@ -25,10 +25,7 @@ function chwt() {
 }
 
 function _wtbranches() {
-    # local -a wtbrs
-    # wtbrs=$(git worktree list | sed 's,.*\[\(.*\)\]$,\1,g')
-    # _describe -t branches 'git worktree branches' wtbrs
-    compadd $(git worktree list | sed 's,.*\[\(.*\)\]$,\1,g')
+    compadd $(git worktree list --porcelain | grep '^branch' | cut -d' ' -f2 | sed 's,refs/heads/,,g')
 }
 
 compdef _wtbranches chwt
