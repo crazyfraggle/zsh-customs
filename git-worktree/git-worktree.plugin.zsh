@@ -8,7 +8,15 @@
 
 function main_git_folder() {
     local git_dir=$(git rev-parse --git-dir | sed 's,\.git.*$,.git,')
-    return git_dir
+    echo $git_dir
+}
+
+function worktree_folder() {
+    if [[ -v GIT_WORKTREE_DIR ]]; then
+        echo $GIT_WORKTREE_DIR
+    else
+        echo $(main_git_folder)/../..
+    fi
 }
 
 # Change to worktree directory based on branch name
@@ -24,8 +32,35 @@ function wtcd() {
     cd $worktree_path
 }
 
+# List Worktrees
 function wtl() {
     git worktree list
+}
+
+# Create a new worktree
+function wtn() {
+    local new_branch=$1
+    local original_branch=$2
+    local foldername=$(worktree_folder)/$(date -Idate)-$(basename $new_branch)
+
+    git worktree add -b $new_branch $foldername $original_branch
+    wtcd $new_branch
+}
+
+# Add worktree for existing branch
+function wta() {
+    local branch=$1
+    local foldername=$(worktree_folder)/$(date -Idate)-$(basename $branch)
+
+    git worktree add $foldername $branch
+    wtcd $branch
+}
+
+function wtd() {
+    local branch=$1
+    local worktree_path=$(git worktree list | grep '\['$branch'\]' | cut -d' ' -f1)
+
+    git worktree remove $worktree_path
 }
 
 function _wtbranches() {
@@ -33,4 +68,10 @@ function _wtbranches() {
     _describe -t branches "Worktree branches" branches
 }
 
-compdef _wtbranches wtcd
+function _nonwtbranches() {
+    local branches=($(git branch -l | grep -v '^[\*\+]'))
+    _describe -t branches "Branches not in a worktree" branches
+}
+
+compdef _wtbranches wtcd wtd
+compdef _nonwtbranches wta
