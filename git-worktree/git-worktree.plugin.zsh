@@ -6,7 +6,7 @@
 # Inspiration from
 #   https://github.com/jspears/worktree
 
-function git_folder() {
+function main_git_folder() {
     local git_dir=$(git rev-parse --git-dir | sed 's,\.git.*$,.git,')
     return git_dir
 }
@@ -24,8 +24,13 @@ function wtcd() {
     cd $worktree_path
 }
 
+function wtl() {
+    git worktree list
+}
+
 function _wtbranches() {
-    compadd $(git worktree list --porcelain | grep '^branch' | cut -d' ' -f2 | sed 's,refs/heads/,,g')
+    local branches=($(git worktree list --porcelain | grep '^branch' | cut -d' ' -f2 | sed 's,refs/heads/,,g'))
+    _describe -t branches "Worktree branches" branches
 }
 
 compdef _wtbranches wtcd
