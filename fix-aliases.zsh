@@ -16,3 +16,8 @@ if command -v nvim >/dev/null 2>&1; then
     alias vi='nvim'
     alias vim='nvim'
 fi
+
+# Ack is ack! (ack-grep on Ubuntu)
+if command -v ack-grep >/dev/null 2>&1; then
+    alias ack='ack-grep'
+fi
