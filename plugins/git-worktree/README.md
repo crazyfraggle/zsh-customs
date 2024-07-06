@@ -7,13 +7,13 @@ A plugin for working with git worktrees.
 ### `GIT_WORKTREE_DIR`
 
 If defined, new worktrees will be added in this folder.
-If not defined, new trees will be added one level up from the git root, aka next to your original clone folder.
+If not defined, new trees will be added one level up from the git root, aka next to your original clone folder. This is useful if you check out the main branch in a subfolder of your project dir.
 
 ## Commands
 
 ### wtcd
 
-Change dir to worktree folder based on branch name. Supports TAB completion of branches.
+Change dir to worktree folder based on branch name. Supports `TAB` completion of branches. The current path within the worktree will be retained if it exists on the destination tree. If not, the command will fall back to root.
 
 ```shell
 wtcd main
