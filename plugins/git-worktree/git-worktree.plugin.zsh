@@ -29,7 +29,14 @@ function wtcd() {
         return 1
     fi
 
-    cd $worktree_path
+    # Get the relative path of the current worktree.
+    local relative_path=$(realpath --relative-to=$(git rev-parse --show-toplevel) $PWD)
+    if [[ ! -d $worktree_path/$relative_path ]]; then
+        echo "The current directory (${relative_path}) is not in the worktree, changing to worktree root."
+        cd $worktree_path
+    else
+        cd $worktree_path/$relative_path
+    fi
 }
 
 # List Worktrees
